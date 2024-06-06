@@ -98,6 +98,21 @@ class HabitDatabase extends ChangeNotifier {
     readHabits();
   }
 
+  // 修改爱好名称
+  Future<void> updateHabitName(int id, String habitName) async {
+    final habit = await isar.habits.get(id);
+
+    if (habit != null) {
+      await isar.writeTxn(() async {
+        habit.name = habitName;
+        await isar.habits.put(habit);
+      });
+    }
+
+    // 重新读取
+    readHabits();
+  }
+
   // 删除
   Future<void> deleteHabit(int id) async {
     await isar.writeTxn(() async {
